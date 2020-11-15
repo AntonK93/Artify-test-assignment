@@ -65,7 +65,6 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo.data,
-      errors: state => state.errors.requestErrors,
       loading: state => state.loading,
     }),
     ...mapGetters({
