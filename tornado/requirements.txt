@@ -1,0 +1,5 @@
+tornado==6.1
+tornado-sqlalchemy==0.7.0
+PyMySQL==0.10.1
+marshmallow-sqlalchemy==0.24.0
+redis==3.5.3

@@ -1,0 +1,7 @@
+.vue-treeselect.treeselect-invalid:not(.vue-treeselect--open) .vue-treeselect__control {
+  border-color: red;
+}
+
+.vue-treeselect.treeselect-invalid .vue-treeselect__single-value {
+  color: red;
+}
