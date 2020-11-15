@@ -48,7 +48,6 @@ def main():
         routes.get_routes(),
         db=db,
         redisDb=redisDb,
-        clientApp=Config.CLIENT_APP,
         config=Config
     )
     app.listen(8888)
