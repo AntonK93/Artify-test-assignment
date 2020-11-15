@@ -1,7 +1,7 @@
 # Artify test assignment
 
 ### Technology stack
-front-end: Vue 2.6 / bootstrap 4 / SCSS
+front-end: Vue 2.6 / bootstrap 4 / SCSS<br>
 back-end: tornado 6.1 / sqlaclhemy 0.7 / redis 2.4 (windows-package) / python 3.9
 
 ### Installation
