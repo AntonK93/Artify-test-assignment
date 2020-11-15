@@ -50,7 +50,7 @@ INSERT INTO `sectors` (`id`, `name`, `parent_sector`) VALUES
 	(18, 'Office', 12),
 	(19, 'Other', 12),
 	(20, 'Outdoor', 12),
-	(21, 'Project furn', 12),
+	(21, 'Project furniture', 12),
 	(22, 'Machinery', 1),
 	(23, 'Machinery components', 22),
 	(24, 'Machinery equipment/tools', 22),

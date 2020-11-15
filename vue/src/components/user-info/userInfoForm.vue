@@ -8,7 +8,7 @@
               <AppInput
                   :value="userInfo.name"
                   :disabled="loading"
-                  label="Name"
+                  label="Name:"
                   field="name"
                   placeholder="Enter your name"
                   type="text"
@@ -18,7 +18,7 @@
               <AppTreeSelect
                   :value="userInfo.selected_sectors"
                   :disabled="loading"
-                  label="Sectors"
+                  label="Sectors:"
                   field="selected_sectors"
                   :multiple="true"
                   :options="sectors"
