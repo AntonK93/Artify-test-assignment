@@ -9,7 +9,7 @@ class Sector(Base):
     
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
-    parent_sector = Column(Integer, ForeignKey('sectors.id'))
+    parent_sector = Column(Integer, ForeignKey('sectors.id', ondelete='SET NULL'))
     children = relationship("Sector")
 
 class SectorSchema(ModelSchema):

@@ -9,8 +9,8 @@ class UserInfoSelectedSectorsPivot(Base):
     __tablename__ = 'user-info-selected-sectors-pivot'
     __table_args__ = (PrimaryKeyConstraint('user_info_entry','sector_entry'),)
     
-    user_info_entry = Column(Integer, ForeignKey('users-info.id'))
-    sector_entry = Column(Integer, ForeignKey('sectors.id'))
+    user_info_entry = Column(Integer, ForeignKey('users-info.id', ondelete='CASCADE'))
+    sector_entry = Column(Integer, ForeignKey('sectors.id', ondelete='CASCADE'))
 
 class UserInfoSelectedSectorsPivotSchema(ModelSchema):
     id = fields.Integer(attribute="sector_entry")

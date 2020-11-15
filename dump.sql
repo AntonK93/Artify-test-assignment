@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `sectors` (
   `parent_sector` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `parent_sector` (`parent_sector`),
-  CONSTRAINT `sectors_ibfk_1` FOREIGN KEY (`parent_sector`) REFERENCES `sectors` (`id`)
+  CONSTRAINT `sectors_ibfk_1` FOREIGN KEY (`parent_sector`) REFERENCES `sectors` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table artify.sectors: ~33 rows (approximately)
@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS `user-info-selected-sectors-pivot` (
   PRIMARY KEY (`user_info_entry`,`sector_entry`),
   KEY `user-info-entry` (`user_info_entry`) USING BTREE,
   KEY `sector-entry` (`sector_entry`) USING BTREE,
-  CONSTRAINT `user-info-selected-sectors-pivot_ibfk_1` FOREIGN KEY (`user_info_entry`) REFERENCES `users-info` (`id`),
-  CONSTRAINT `user-info-selected-sectors-pivot_ibfk_2` FOREIGN KEY (`sector_entry`) REFERENCES `sectors` (`id`)
+  CONSTRAINT `user-info-selected-sectors-pivot_ibfk_1` FOREIGN KEY (`user_info_entry`) REFERENCES `users-info` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user-info-selected-sectors-pivot_ibfk_2` FOREIGN KEY (`sector_entry`) REFERENCES `sectors` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table artify.user-info-selected-sectors-pivot: ~0 rows (approximately)
