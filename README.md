@@ -29,3 +29,4 @@ sqlalchemy package, so i used marshmallow package with Schemas to convert data f
 ### About the assignment
 Front-end presents only main route "/" with connected component of user-form which we can fill and send
 to the server. Server validates the form and responds to  client, client notificates user with a server respond in a popup.
+After successfully submiting the request, it creates a session with uuid number name and stores it in redis with key pair sessionId=userInfoId with expiration time that is defined in config. After creating the session it assigns it into response request header as Set-Cookie and after that client keeps the session. I used headers to provide possibility to use cookies in request headers. Under the front end in vue, in a http service i used withCredentials option to enable site cookies in axios headers.
