@@ -3,7 +3,6 @@ import { stringify } from 'qs';
 import app from '@/main';
 import config from '@/config/app.config';
 import NotificationService from '@/services/notification.service';
-import VueCookies from 'vue-cookies';
 
 const instance = axios.create({
     baseURL: config.api_url,
@@ -14,11 +13,13 @@ const instance = axios.create({
 instance.interceptors.request.use((request) => {
     if (typeof request.hideLoading === 'undefined' || !request.hideLoading) {
         app.$Progress.start();
+        app.$store.dispatch('setLoading', true);
     }
 
     return request;
 }, (error) => {
     app.$Progress.finish();
+    app.$store.dispatch('setLoading', false);
 
     NotificationService.error('Network error. Check your connection');
     return Promise.reject(error);
@@ -26,6 +27,7 @@ instance.interceptors.request.use((request) => {
 
 instance.interceptors.response.use((response) => {
     app.$Progress.finish();
+    app.$store.dispatch('setLoading', false);
 
     // Show Api errors
     if (typeof response.data.ok !== 'undefined') {
@@ -38,6 +40,7 @@ instance.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     app.$Progress.finish();
+    app.$store.dispatch('setLoading', false);
 
     if (typeof error.response === 'undefined'
         || typeof error.response.status === 'undefined') {

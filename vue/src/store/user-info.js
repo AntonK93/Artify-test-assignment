@@ -32,16 +32,12 @@ export default {
             }
         },
         getUserInfo({ commit, dispatch }) {
-            dispatch('setLoading', true, { root: true });
             return UserInfoService.getUserInfo()
                 .then((res) => {
                     if (res.hasOwnProperty('data')) {
                         commit('data', res.data)
                     }
-                })
-                .finally(() => {
-                    dispatch('setLoading', false, { root: true });
-                })
+                });
         },
         updateUserInfoData({ commit }, data) {
             commit(data.name, data.value);
@@ -54,18 +50,10 @@ export default {
             }
         },
         updateData({ state, dispatch }) {
-            dispatch('setLoading', true, { root: true });
-            return UserInfoService.updateUserInfo(state.data)
-                .finally(() => {
-                    dispatch('setLoading', false, { root: true });
-                });
+            return UserInfoService.updateUserInfo(state.data);
         },
         saveData({ state, dispatch }) {
-            dispatch('setLoading', true, { root: true });
-            return UserInfoService.saveUserInfo(state.data)
-                .finally(() => {
-                    dispatch('setLoading', false, { root: true });
-                });
+            return UserInfoService.saveUserInfo(state.data);
         },
     },
 };

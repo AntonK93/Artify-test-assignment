@@ -8,16 +8,12 @@ export default {
             dispatch('getSectors');
         },
         getSectors({ dispatch }) {
-            dispatch('setLoading', true, { root: true });
             return SectorService.getSectors()
                 .then((res) => {
                     Sector.create({
                         data: res.data,
                     })
-                })
-                .finally(() => {
-                    dispatch('setLoading', false, { root: true });
-                })
+                });
         },
     },
     getters: {
