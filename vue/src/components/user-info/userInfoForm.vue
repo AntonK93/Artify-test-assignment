@@ -77,7 +77,7 @@ export default {
     },
     saveData() {
       this.$store.dispatch('errors/clearErrors');
-      this.$store.dispatch('userInfo/saveData')
+      this.$store.dispatch('userInfo/handleData')
           .then((res) => {
             NotificationService.success(res.message);
           })

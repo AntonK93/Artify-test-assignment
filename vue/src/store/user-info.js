@@ -46,6 +46,20 @@ export default {
         updateUserInfoData({ commit }, data) {
             commit(data.name, data.value);
         },
+        handleData({ dispatch }) {
+            if (VueCookies.get('session_id')) {
+                return dispatch('updateData');
+            } else {
+                return dispatch('saveData')
+            }
+        },
+        updateData({ state, dispatch }) {
+            dispatch('setLoading', true, { root: true });
+            return UserInfoService.updateUserInfo(state.data)
+                .finally(() => {
+                    dispatch('setLoading', false, { root: true });
+                });
+        },
         saveData({ state, dispatch }) {
             dispatch('setLoading', true, { root: true });
             return UserInfoService.saveUserInfo(state.data)

@@ -26,15 +26,26 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Origin', self.settings['config'].CLIENT_APP)
         self.set_header('Access-Control-Allow-Headers', 'Content-Type')
         self.set_header('Access-Control-Allow-Credentials', 'true')
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS')
         self.set_header('Content-type', 'application/json')
 
     def options(self):
         self.set_status(204)
         self.finish()
 
-    def finishWithErrors(self, errors):
+    def finishWithValidationError(self, errors):
         self.set_status(422)
-        self.finish(json.dumps({'errors': errors}))
+        self.finish(json.dumps({'message': 'Validation error', 'errors': errors}))
+
+    def finishWithCustomError(self, error):
+        self.set_status(423)
+        self.finish(json.dumps({'message': error}))
+
+    def finishWithMessage(self, message):
+        self.finish(json.dumps({'message': message}))
+
+    def finishWithMessageAndData(self, message, data):
+        self.finish(json.dumps({'message': message, 'data': data}))
 
 
 class userInfoHandler(BaseHandler):
@@ -45,31 +56,39 @@ class userInfoHandler(BaseHandler):
 
     def get(self):
         if self.userExist is not False:
-            response = json.dumps({'data': self.userInfoRepository.getUserInfoJson(self.userInfoId)})
+            self.finishWithMessageAndData('Successfully!',  self.userInfoRepository.getUserInfoJson(self.userInfoId))
         else:
-            response = json.dumps({'message': 'Not Authorized'})
-
-        self.write(response)
+            # Custom approach to clear cookies, set_cookie method does not have param to set expiration time
+            self.set_header('Set-Cookie', 'session_id='+self.sessionHandler.getSessionId()+';expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/')
+            self.finishWithMessage('Not Authorized')
 
     def post(self):
         try:
             userValidatedData = UserInfoValidationSchema().load(self.args)
         except ValidationError as err:
-            return self.finishWithErrors(err.messages)
+            self.finishWithValidationError(err.messages)
+
+        userInfoId = self.userInfoRepository.createUserInfo(userValidatedData)
+
+        self.sessionHandler.generateSessionId(userInfoId)
+
+        self.set_cookie("session_id", self.sessionHandler.getSessionId())
+
+        self.finishWithMessage('User info was created successfully!')
+
+    def patch(self):
+        try:
+            userValidatedData = UserInfoValidationSchema().load(self.args)
+        except ValidationError as err:
+            self.finishWithValidationError(err.messages)
 
         if self.userExist is not False:
             self.userInfoRepository.updateUserInfo(userValidatedData, self.userInfoId)
 
-            response = json.dumps({'message': 'User info was updated successfully!'})
+            self.finishWithMessage('User info was updated successfully!')
         else:
-            userInfoId = self.userInfoRepository.createUserInfo(userValidatedData)
+            self.finishWithCustomError('Cannot update data, user not found')
 
-            self.sessionHandler.generateSessionId(userInfoId)
-            response = json.dumps({'message': 'User info was created successfully!'})
-
-        self.set_cookie("session_id", self.sessionHandler.getSessionId())
-
-        self.write(response)
 
 class sectorsHandler(BaseHandler):
     def initialize(self):

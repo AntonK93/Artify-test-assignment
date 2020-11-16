@@ -57,6 +57,12 @@ instance.interceptors.response.use((response) => {
         return Promise.reject(error);
     }
 
+    // Custom error
+    if (error.response.status === 423) {
+        NotificationService.error('Error: ', error.response.data.message);
+        return Promise.reject(error);
+    }
+
     // Api errors that are returned with error codes
     NotificationService.stickyError(error.response.data.message);
     return Promise.reject(error);
