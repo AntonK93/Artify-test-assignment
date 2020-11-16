@@ -14,6 +14,14 @@ class BaseHandler(tornado.web.RequestHandler):
         self.sessionHandler = SessionHandlerService(self.settings['redisDb'], self.get_cookie('session_id'), self.settings['config'].SESSION_TIME)
         self.userInfoId = self.sessionHandler.getUserInfoId()
 
+    def prepare(self):
+        self.args = {}
+        if 'Content-Type' in self.request.headers:
+            if 'application/json' in self.request.headers['Content-Type']:
+                jsonBody = json.loads(self.request.body)
+                if 'data' in jsonBody:
+                    self.args = jsonBody['data']
+
     def set_default_headers(self):
         self.set_header('Access-Control-Allow-Origin', self.settings['config'].CLIENT_APP)
         self.set_header('Access-Control-Allow-Headers', 'Content-Type')
@@ -23,6 +31,11 @@ class BaseHandler(tornado.web.RequestHandler):
     def options(self):
         self.set_status(204)
         self.finish()
+
+    def finishWithErrors(self, errors):
+        self.set_status(422)
+        self.finish(json.dumps({'errors': errors}))
+
 
 class userInfoHandler(BaseHandler):
     def initialize(self):
@@ -39,13 +52,10 @@ class userInfoHandler(BaseHandler):
         self.write(response)
 
     def post(self):
-        data = json.loads(self.request.body)['data']
-
         try:
-            userValidatedData = UserInfoValidationSchema().load(data)
+            userValidatedData = UserInfoValidationSchema().load(self.args)
         except ValidationError as err:
-            self.set_status(422)
-            self.finish(json.dumps({'errors': err.messages}))
+            return self.finishWithErrors(err.messages)
 
         if self.userExist is not False:
             self.userInfoRepository.updateUserInfo(userValidatedData, self.userInfoId)

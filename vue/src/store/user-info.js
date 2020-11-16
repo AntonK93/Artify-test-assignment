@@ -35,11 +35,13 @@ export default {
             dispatch('setLoading', true, { root: true });
             return UserInfoService.getUserInfo()
                 .then((res) => {
-                    dispatch('setLoading', false, { root: true });
                     if (res.hasOwnProperty('data')) {
                         commit('data', res.data)
                     }
-                });
+                })
+                .finally(() => {
+                    dispatch('setLoading', false, { root: true });
+                })
         },
         updateUserInfoData({ commit }, data) {
             commit(data.name, data.value);
