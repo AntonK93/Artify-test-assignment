@@ -33,7 +33,6 @@ const store = new Vuex.Store({
             dispatch('userInfo/init');
         },
         setLoading({ commit }, loading) {
-            console.log('test');
             commit('loading', loading);
         }
     },
