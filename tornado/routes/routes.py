@@ -96,8 +96,7 @@ class sectorsHandler(BaseHandler):
         self.sectorRepository = SectorRepository(self.settings['db'])
 
     def get(self):
-        response = json.dumps({'data': self.sectorRepository.getSectorsJson()})
-        self.write(response)
+        self.finishWithMessageAndData('Successfully!', self.sectorRepository.getSectorsJson())
 
 class routes():
     def get_routes():
